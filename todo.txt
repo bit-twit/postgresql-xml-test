@@ -1,2 +1,3 @@
 - add custom XML type that helps Hibernate map between String <-> PostgreSQL XML
+    http://wiki.postgresql.org/wiki/Hibernate_XML_Type
 - see if we can use custom queries with JPA to retrieve data through PostgreSQL XPATH query
