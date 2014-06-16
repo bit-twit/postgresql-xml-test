@@ -2,14 +2,25 @@ package org.bittwit.postgresql.xml.test;
 
 import java.io.Serializable;
 
+import javax.persistence.ColumnResult;
+import javax.persistence.ConstructorResult;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name="user_test_table")
+@SqlResultSetMapping(name="GetUserDtoByPayloadPropertySexQuery",
+    classes={
+        @ConstructorResult(targetClass=UserDto.class, columns = { 
+            @ColumnResult(name="name"),
+            @ColumnResult(name="sex")})
+    })
 public class User implements Serializable {
 
     private static final long serialVersionUID = 3139895201814574652L;
@@ -46,6 +57,7 @@ public class User implements Serializable {
         this.name = name;
     }
 
+    @Type(type="org.bittwit.postgresql.xml.test.PostgreSQLXmlType")
     public String getPayload() {
         return payload;
     }
