@@ -15,4 +15,6 @@ public interface UserDao {
     public List<User> getByPayloadPropertySex (String sex);
 
     public List<UserDto> getUserDtoByPayloadPropertySex (String sex);
+
+    public List<User> getByPartnerId (Long partnerId);
 }

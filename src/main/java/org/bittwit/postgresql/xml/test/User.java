@@ -1,13 +1,19 @@
 package org.bittwit.postgresql.xml.test;
 
 import java.io.Serializable;
+import java.util.Set;
+import java.util.TreeSet;
 
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
 import javax.persistence.ColumnResult;
 import javax.persistence.ConstructorResult;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
 
@@ -25,9 +31,17 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = 3139895201814574652L;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @Type(type="org.bittwit.postgresql.xml.test.PostgreSQLXmlType")
     private String payload;
+    @ElementCollection
+    @CollectionTable(name="users_x_partners_test_table", 
+        joinColumns={@JoinColumn(name="user_id")})
+    @Column(name="partner_id")
+    private Set<Long> partnerIds;
 
     public User () {
         
@@ -39,8 +53,13 @@ public class User implements Serializable {
         this.payload = payload;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public User (Long id, String name, String payload, Set<Long> partnerIds) {
+        this.id = id;
+        this.name = name;
+        this.payload = payload;
+        this.partnerIds = new TreeSet<Long>(partnerIds);
+    }
+
     public Long getId() {
         return id;
     }
@@ -57,13 +76,20 @@ public class User implements Serializable {
         this.name = name;
     }
 
-    @Type(type="org.bittwit.postgresql.xml.test.PostgreSQLXmlType")
     public String getPayload() {
         return payload;
     }
 
     public void setPayload(String payload) {
         this.payload = payload;
+    }
+
+    public Set<Long> getPartnerIds() {
+        return partnerIds;
+    }
+
+    public void setPartnerIds(Set<Long> partnerIds) {
+        this.partnerIds = partnerIds;
     }
 
     @Override

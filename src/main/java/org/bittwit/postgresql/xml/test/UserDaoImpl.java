@@ -32,7 +32,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<User> getByName(String name) {
         System.out.println("Getting user with name:" + name);
-        Query query = entityManager.createQuery("select u from User u where u.name LIKE '" + name + "'");
+        Query query = entityManager.createQuery("SELECT u FROM User u WHERE u.name LIKE '" + name + "'");
         List<User> users = (List<User>) query.getResultList();
         return users;
     }
@@ -57,6 +57,16 @@ public class UserDaoImpl implements UserDao {
         return users;
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<User> getByPartnerId(Long partnerId) {
+        System.out.println("Getting users with partnerId:" + partnerId);
+        
+        Query query = entityManager.createQuery("SELECT u FROM User u WHERE :partnerId MEMBER OF u.partnerIds");
+        query.setParameter("partnerId", partnerId);
+        List<User> users = (List<User>) query.getResultList();
+        return users;
+    }
 
 //    TODO: implement a select with xpath for <user><sex>text value
 //    public Stock findByStockCode(String stockCode){
