@@ -1,45 +1,45 @@
 - try 2 POCs for different mappings of user/partners
-	(16:13:01) Matthias Hüller: but I was thinking about this partner id stuff
+	(16:13:01) : but I was thinking about this partner id stuff
 	(16:13:04) iplesoianu: yeah
-	(16:13:12) Matthias Hüller: i think for campaigns where we have customer fields per partner
+	(16:13:12) : i think for campaigns where we have customer fields per partner
 	(16:13:40) iplesoianu: hmm, like custom customer form fields ?
-	(16:13:40) Matthias Hüller: we need to create separate lead entry in Iris for each partner
-	(16:13:44) Matthias Hüller: yes
-	(16:14:13) Matthias Hüller: because otherwise its probably hard to do the exports for each partner
+	(16:13:40) : we need to create separate lead entry in Iris for each partner
+	(16:13:44) : yes
+	(16:14:13) : because otherwise its probably hard to do the exports for each partner
 	(16:14:16) iplesoianu: ah, yes it makes sense, you'll have different payloads
-	(16:14:19) Matthias Hüller: yes
-	(16:15:04) Matthias Hüller: partner a = general payload + custom fields for partner a
+	(16:14:19) : yes
+	(16:15:04) : partner a = general payload + custom fields for partner a
 	partner b = general payload + custom fields for partner b
 	and so on...
 	(16:16:03) iplesoianu: hmm
 	(16:16:15) iplesoianu: I think the problem would be at the id
-	(16:16:16) Matthias Hüller: so probably we need prometheus to split the payload and to create sepearte lead entries for each partner
-	(16:16:23) Matthias Hüller: yes, you've already told me
+	(16:16:16) : so probably we need prometheus to split the payload and to create sepearte lead entries for each partner
+	(16:16:23) : yes, you've already told me
 	(16:16:34) iplesoianu: forgot about it :D
 	(16:16:36) iplesoianu: :))
-	(16:16:53) Matthias Hüller: but can't we use a combined id using order id and partner id
-	(16:16:58) Matthias Hüller: ?
+	(16:16:53) : but can't we use a combined id using order id and partner id
+	(16:16:58) : ?
 	(16:17:03) iplesoianu: yeah, I should probably put back the lead_id and make all the tables connect on lead_id ?
 	(16:17:09) iplesoianu: or like that 
 	(16:17:10) iplesoianu: yeah
-	(16:17:13) Matthias Hüller: or lead id
+	(16:17:13) : or lead id
 	(16:17:40) iplesoianu: on (order_id, parnter_id) FK
-	(16:17:55) Matthias Hüller: yes...
+	(16:17:55) : yes...
 	(16:18:04) iplesoianu: I'm not sure how it will work, for cases like right now, when we don't have different payloads
 	(16:18:23) iplesoianu: so would have only one lead with a couple of same partners 
 	(16:18:52) iplesoianu: with the second option it could work in both cases I guess
-	(16:19:07) Matthias Hüller: whats the second option?
-	(16:19:10) Matthias Hüller: lead id?
+	(16:19:07) : whats the second option?
+	(16:19:10) : lead id?
 	(16:19:15) iplesoianu: you would just generate one or more lead_id entries, connected to one or more partner_ids
 	(16:19:18) iplesoianu: yeha
 	(16:19:44) iplesoianu: I could try some POCs for both cases
-	(16:20:04) Matthias Hüller: and lead_id is auto increment?
+	(16:20:04) : and lead_id is auto increment?
 	(16:20:09) iplesoianu: y
-	(16:20:18) Matthias Hüller: yes
-	(16:20:18) Matthias Hüller: pls
-	(16:20:22) Matthias Hüller: that would be great
+	(16:20:18) : yes
+	(16:20:18) : pls
+	(16:20:22) : that would be great
 	(16:20:40) iplesoianu: but that means I'll probably take one more day at least
-	(16:20:51) Matthias Hüller: yes... thats ok 
+	(16:20:51) : yes... thats ok 
 
 + model PartnerIds and test export
 	should be one partner export where partnerId = ?
