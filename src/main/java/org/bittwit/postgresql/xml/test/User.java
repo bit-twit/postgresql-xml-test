@@ -1,23 +1,19 @@
 package org.bittwit.postgresql.xml.test;
 
 import java.io.Serializable;
-import java.util.Set;
-import java.util.TreeSet;
 
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ColumnResult;
 import javax.persistence.ConstructorResult;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name="user_test_table")
@@ -33,31 +29,23 @@ public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="user_id")
     private Long id;
+    private Long orderId;
+    private Long partnerId;
     private String name;
-    @Type(type="org.bittwit.postgresql.xml.test.PostgreSQLXmlType")
-    private String payload;
-    @ElementCollection
-    @CollectionTable(name="users_x_partners_test_table", 
-        joinColumns={@JoinColumn(name="user_id")})
-    @Column(name="partner_id")
-    private Set<Long> partnerIds;
+
+    @OneToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="user_id")
+    private Payload payload;
 
     public User () {
         
     }
 
-    public User (Long id, String name, String payload) {
+    public User (Long id, String name) {
         this.id = id;
         this.name = name;
-        this.payload = payload;
-    }
-
-    public User (Long id, String name, String payload, Set<Long> partnerIds) {
-        this.id = id;
-        this.name = name;
-        this.payload = payload;
-        this.partnerIds = new TreeSet<Long>(partnerIds);
     }
 
     public Long getId() {
@@ -76,20 +64,28 @@ public class User implements Serializable {
         this.name = name;
     }
 
-    public String getPayload() {
+    public Payload getPayload() {
         return payload;
     }
 
-    public void setPayload(String payload) {
+    public void setPayload(Payload payload) {
         this.payload = payload;
     }
 
-    public Set<Long> getPartnerIds() {
-        return partnerIds;
+    public Long getOrderId() {
+        return orderId;
     }
 
-    public void setPartnerIds(Set<Long> partnerIds) {
-        this.partnerIds = partnerIds;
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
+
+    public Long getPartnerId() {
+        return partnerId;
+    }
+
+    public void setPartnerId(Long partnerId) {
+        this.partnerId = partnerId;
     }
 
     @Override

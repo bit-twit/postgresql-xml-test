@@ -41,8 +41,9 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<User> getByPayloadPropertySex(String sex) {
         System.out.println("Getting user with sex:" + sex);
-        Query query = entityManager.createNativeQuery("SELECT id, name, payload FROM user_test_table" +
-                " WHERE (xpath('/user/sex/text()', payload))[1]\\:\\:text LIKE '" + sex + "'", User.class);
+        Query query = entityManager.createNativeQuery("SELECT * FROM user_test_table u" +
+                " INNER JOIN user_payload p ON u.user_id = p.user_id" +
+                " WHERE (xpath('/user/sex/text()', p.payload))[1]\\:\\:text LIKE '" + sex + "'", User.class);
         List<User> users = (List<User>) query.getResultList();
         return users;
     }
@@ -51,8 +52,9 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<UserDto> getUserDtoByPayloadPropertySex(String sex) {
         System.out.println("Getting user with sex:" + sex);
-        Query query = entityManager.createNativeQuery("SELECT name, (xpath('/user/sex/text()', payload))[1]\\:\\:text sex FROM user_test_table" +
-                " WHERE (xpath('/user/sex/text()', payload))[1]\\:\\:text LIKE '" + sex + "'", "GetUserDtoByPayloadPropertySexQuery");
+        Query query = entityManager.createNativeQuery("SELECT name, (xpath('/user/sex/text()', p.payload))[1]\\:\\:text sex FROM user_test_table u" +
+        		" INNER JOIN user_payload p ON u.user_id = p.user_id" +
+                " WHERE (xpath('/user/sex/text()', p.payload))[1]\\:\\:text LIKE '" + sex + "'", "GetUserDtoByPayloadPropertySexQuery");
         List<UserDto> users = (List<UserDto>) query.getResultList();
         return users;
     }
@@ -62,7 +64,7 @@ public class UserDaoImpl implements UserDao {
     public List<User> getByPartnerId(Long partnerId) {
         System.out.println("Getting users with partnerId:" + partnerId);
         
-        Query query = entityManager.createQuery("SELECT u FROM User u WHERE :partnerId MEMBER OF u.partnerIds");
+        Query query = entityManager.createQuery("SELECT u FROM User u WHERE u.partnerId = :partnerId");
         query.setParameter("partnerId", partnerId);
         List<User> users = (List<User>) query.getResultList();
         return users;

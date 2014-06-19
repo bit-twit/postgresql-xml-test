@@ -1,8 +1,6 @@
 package org.bittwit.postgresql.xml.test;
 
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -93,28 +91,20 @@ public class UserDaoTest extends AbstractTransactionalJUnit4SpringContextTests {
     @Test
 //    @Rollback(false)
     public void testGetByPartnerId () {
-        Set<Long> partnerIds = new TreeSet<Long>();
-        partnerIds.add(1L);
-        partnerIds.add(2L);
-        
         User u = MockUtils.createNewMaleUser();
         dao.save(u);
         u = MockUtils.createNewMaleUser();
-        u.setPartnerIds(partnerIds);
+        u.setPartnerId(1L);
         dao.save(u);
         u = MockUtils.createNewMaleUser();
-        u.setPartnerIds(partnerIds);
+        u.setPartnerId(1L);
         dao.save(u);
         u = MockUtils.createNewMaleUser();
-        partnerIds = new TreeSet<Long>();
-        partnerIds.add(1L);
-        partnerIds.add(2L);
-        partnerIds.add(3L);
-        u.setPartnerIds(partnerIds);
+        u.setPartnerId(3L);
         dao.save(u);
 
         List<User> users = dao.getByPartnerId(1L);
-        Assert.assertEquals(3, users.size());
+        Assert.assertEquals(2, users.size());
 
         users = dao.getByPartnerId(3L);
         Assert.assertEquals(1, users.size());
