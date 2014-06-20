@@ -1,7 +1,10 @@
 package org.bittwit.postgresql.xml.test;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ColumnResult;
 import javax.persistence.ConstructorResult;
@@ -11,7 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
 
@@ -30,30 +33,32 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="user_id")
-    private Long id;
+    private Long userId;
+    @Column(name="order_id")
     private Long orderId;
+    @Column(name="partner_id")
     private Long partnerId;
     private String name;
-
-    @OneToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="user_id")
-    private Payload payload;
+    @OneToMany(fetch=FetchType.LAZY,
+            cascade={CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH},
+            mappedBy="user")
+    private List<Payload> payload;
 
     public User () {
-        
     }
 
-    public User (Long id, String name) {
-        this.id = id;
+    public User (String name, Long orderId, Long partnerId) {
         this.name = name;
+        this.orderId = orderId;
+        this.partnerId = partnerId;
     }
 
-    public Long getId() {
-        return id;
+    public Long getUserId() {
+        return this.userId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getName() {
@@ -62,14 +67,6 @@ public class User implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Payload getPayload() {
-        return payload;
-    }
-
-    public void setPayload(Payload payload) {
-        this.payload = payload;
     }
 
     public Long getOrderId() {
@@ -88,11 +85,20 @@ public class User implements Serializable {
         this.partnerId = partnerId;
     }
 
+    public Payload getPayload() {
+        return payload != null ? payload.get(0) : null;
+    }
+
+    public void setPayload(Payload payload) {
+        this.payload = new ArrayList<Payload>();
+        this.payload.add(payload);
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((userId == null) ? 0 : userId.hashCode());
         return result;
     }
 
@@ -105,17 +111,17 @@ public class User implements Serializable {
         if (getClass() != obj.getClass())
             return false;
         User other = (User) obj;
-        if (id == null) {
-            if (other.id != null)
+        if (userId == null) {
+            if (other.userId != null)
                 return false;
-        } else if (!id.equals(other.id))
+        } else if (!userId.equals(other.userId))
             return false;
         return true;
     }
 
     @Override
     public String toString() {
-        return "User [id=" + id + ", name=" + name + ", payload=" + payload + "]";
+        return "User [userId=" + userId + ", name=" + name + "]";
     }
 
 }

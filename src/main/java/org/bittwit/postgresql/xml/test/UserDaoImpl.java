@@ -70,6 +70,17 @@ public class UserDaoImpl implements UserDao {
         return users;
     }
 
+    @Override
+    public User getById(Long userId) {
+        System.out.println("Getting user with id:" + userId);
+        
+        Query query = entityManager.createQuery("SELECT u FROM User u LEFT JOIN FETCH u.payload p WHERE u.userId = :userId");
+        query.setParameter("userId", userId);
+        User result = (User) query.getSingleResult();
+        result.getPayload();
+        return result;
+    }
+
 //    TODO: implement a select with xpath for <user><sex>text value
 //    public Stock findByStockCode(String stockCode){
 //        List list = getHibernateTemplate().find(

@@ -16,15 +16,29 @@ public class UserDaoTest extends AbstractTransactionalJUnit4SpringContextTests {
 
     @Autowired
     UserDao dao;
+    @Autowired
+    PayloadDao payloadDao;
 
     @Test
     public void testSave () {
         User  u = MockUtils.createNewMaleUser();
         dao.save(u);
+
+        Payload p = MockUtils.createNewMalePayload();
+        p.setUser(u);
+        p.setUserId(u.getUserId());
+        payloadDao.save(p);
+        u.setPayload(p);
+        dao.save(u);
+
         List<User> persistedUsers = dao.getByName(u.getName());
-        
+
+//        relation is defined as lazy, so payload will be null
         Assert.assertTrue(persistedUsers.size() > 0);
-        Assert.assertNotNull(persistedUsers.get(0).getId());
+//        Assert.assertNull(persistedUsers.get(0).getPayload());
+
+        User persistedUser = dao.getById(u.getUserId());
+        Assert.assertNotNull(persistedUser.getPayload());
     }
 
     @Test

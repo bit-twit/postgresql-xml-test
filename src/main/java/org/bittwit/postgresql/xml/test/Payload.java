@@ -2,32 +2,39 @@ package org.bittwit.postgresql.xml.test;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
 
 @Entity
+@Table(name="user_payload")
 public class Payload implements Serializable {
     private static final long serialVersionUID = 3988263845365540680L;
 
-    @OneToOne(fetch=FetchType.LAZY, mappedBy="payload", orphanRemoval=true)
-    @PrimaryKeyJoinColumn
     @Id
+    @Column(name="user_id")
+    private Long userId;
+
+    @ManyToOne(fetch=FetchType.LAZY, optional=false)
+    @JoinColumn(name="user_id", insertable=false, updatable=false)
     private User user;
 
     @Type(type="org.bittwit.postgresql.xml.test.PostgreSQLXmlType")
     private String payload;
 
-    public Payload () {
+    Payload () {
         
     }
 
-    public Payload (User u, String payload) {
-        this.user = u;
+    Payload (String payload) {
         this.payload = payload;
     }
 
@@ -39,19 +46,19 @@ public class Payload implements Serializable {
         this.payload = payload;
     }
 
-    public User getUser() {
-        return user;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((user == null) ? 0 : user.hashCode());
+        result = prime * result + ((userId == null) ? 0 : userId.hashCode());
         return result;
     }
 
@@ -64,11 +71,24 @@ public class Payload implements Serializable {
         if (getClass() != obj.getClass())
             return false;
         Payload other = (Payload) obj;
-        if (user == null) {
-            if (other.user != null)
+        if (userId == null) {
+            if (other.userId != null)
                 return false;
-        } else if (!user.equals(other.user))
+        } else if (!userId.equals(other.userId))
             return false;
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Payload [userId=" + userId + ", payload=" + payload + "]";
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
